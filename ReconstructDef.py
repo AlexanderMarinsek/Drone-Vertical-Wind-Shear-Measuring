@@ -14,7 +14,7 @@ class Reconstruct:
     def __init__ (self, filepath):
         self._filepath = filepath
         self._wind_labels_row = \
-            ['Altitude rel. [m]', 'WS abs. [m/s]', 'WS dir. [deg]']
+            ['Relative altitude [m]', 'Wind speed [m/s]', 'Wind direction [deg]']
         self.full_filename_raw = filepath + '/data_raw_comb.csv'
         self.full_filename_wind = filepath + '/data_wind.csv'
 
@@ -112,16 +112,22 @@ class Reconstruct:
         ax1 = fig.add_subplot(111)
         ax2 = ax1.twinx()
 
-        ax1.plot(data[1:,0], data[1:,1], color = "#006bb3")
+        lns1 = ax1.plot(data[1:,0], data[1:,1], color = "#006bb3",
+            label = "Wind speed")
 
         ax1.set(xlabel=data_labels[0,0], ylabel=data_labels[0,1],
             title="Vertical wind shear")
 
         ax1.grid()
 
-        ax2.plot(data[1:,0], data[1:,2], color = "#913D88")
+        lns2 = ax2.plot(data[1:,0], data[1:,2], color = "#913D88",
+            label = "Wind direction")
 
         ax2.set(ylabel=data_labels[0,2])
+
+        lns = lns1 + lns2
+        labs = [l.get_label() for l in lns]
+        ax1.legend(lns, labs, loc = "lower right")
 
         fig.savefig(self._filepath + '/vertical_wind_shear.png')
         plt.show()
